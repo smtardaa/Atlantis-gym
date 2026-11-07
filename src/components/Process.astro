@@ -1,0 +1,63 @@
+---
+import { Picture } from 'astro:assets';
+import hedef from '../assets/photos/adim-hedef.jpg';
+import plan from '../assets/photos/adim-plan.jpg';
+import baslangic from '../assets/photos/adim-baslangic.jpg';
+import Icon from './Icon.astro';
+
+const cards = [
+  {
+    title: 'Hedefini Konuşalım',
+    text: 'Neyi başarmak istediğini ve nasıl bir başlangıç aradığını birlikte değerlendirelim.',
+    img: hedef,
+    alt: 'Salondaki ağırlık istasyonu ve duvardaki vücut geliştirme posterleri',
+    position: '30% 50%',
+  },
+  {
+    title: 'Birlikte Planlayalım',
+    text: 'Deneyimini ve günlük düzenini dikkate alarak antrenman seçeneklerini konuşalım.',
+    img: plan,
+    alt: 'Serbest ağırlık alanında dambıl rafları ve antrenman sehpaları',
+    position: '35% 50%',
+  },
+  {
+    title: 'İlk Adımı Atalım',
+    text: 'Salon ve üyelik hakkında merak ettiklerini netleştirerek başlayalım.',
+    img: baslangic,
+    alt: 'Kardiyo alanında yan yana dizilmiş koşu bantları',
+    position: '55% 50%',
+  },
+];
+---
+<section class="process on-light" id="kocluk" aria-labelledby="kocluk-baslik">
+  <div class="container">
+    <div class="process__head reveal">
+      <div>
+        <h2 id="kocluk-baslik">Programını birlikte hazırlayalım.</h2>
+        <p>Hedeflerini, deneyimini ve sana uygun zamanları konuşalım. Sana uygun başlangıcı birlikte planlayalım.</p>
+      </div>
+      <a class="btn btn--gold" href="#iletisim">İletişime Geç <Icon name="arrow" size={18} /></a>
+    </div>
+    <ol class="process__grid">
+      {cards.map((card, i) => (
+        <li class="process-card reveal">
+          <Picture
+            src={card.img}
+            formats={['webp']}
+            widths={[420, 640, 900]}
+            sizes="(max-width: 760px) 100vw, 33vw"
+            alt={card.alt}
+            loading="lazy"
+            decoding="async"
+            style={`object-position:${card.position}`}
+          />
+          <div class="process-card__body">
+            <span class="process-card__step" aria-hidden="true">0{i + 1}</span>
+            <h3>{card.title}</h3>
+            <p>{card.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

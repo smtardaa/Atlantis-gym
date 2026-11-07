@@ -1,0 +1,8 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo.png';
+import { withBase } from '../data/site';
+---
+<a class="brand" href={withBase('/')} aria-label="Atlantis Spor Merkezi – ana sayfa">
+  <Image src={logo} alt="Atlantis Spor Merkezi" height={40} densities={[1, 2]} loading="eager" />
+</a>

@@ -1,0 +1,36 @@
+---
+import { nav, site, withBase } from '../data/site';
+import Brand from './Brand.astro';
+import Icon from './Icon.astro';
+---
+<header class="site-header" id="ust">
+  <div class="site-header__bar container">
+    <Brand />
+    <nav class="site-nav" aria-label="Ana menü">
+      <ul>
+        {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </nav>
+    <a class="btn btn--gold site-header__cta" href={withBase('/#iletisim')}>Bilgi Al</a>
+    <div class="site-header__mobile">
+      <a class="icon-btn" href={site.phone.href} aria-label={`Bizi arayın: ${site.phone.display}`}>
+        <Icon name="phone" size={22} />
+      </a>
+      <button class="icon-btn" id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobil-menu" aria-label="Menüyü aç">
+        <span data-icon="open"><Icon name="menu" size={24} /></span>
+        <span data-icon="close" hidden><Icon name="close" size={24} /></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobil-menu" hidden>
+    <nav aria-label="Mobil menü">
+      <ul>
+        {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </nav>
+    <div class="mobile-menu__actions">
+      <a class="btn btn--gold" href={withBase('/#iletisim')}>Bilgi Al</a>
+      <a class="btn btn--outline" href={site.phone.href}><Icon name="phone" size={18} />Hemen Ara</a>
+    </div>
+  </div>
+</header>

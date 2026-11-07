@@ -1,0 +1,99 @@
+---
+import { plans, site, topics } from '../data/site';
+import Icon from './Icon.astro';
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
+---
+<section class="contact" id="iletisim" aria-labelledby="iletisim-baslik">
+  <div class="container contact__grid">
+    <div class="contact__intro reveal">
+      <h2 id="iletisim-baslik">İlk adımı birlikte atalım.</h2>
+      <p>Koçluk, salonumuz ve üyelik seçenekleri hakkında bizimle iletişime geç.</p>
+      <div class="contact__actions">
+        <a class="btn btn--gold" href={site.phone.href}><Icon name="phone" size={18} />Hemen Ara</a>
+        <a class="btn btn--outline" href={site.email.href}><Icon name="mail" size={18} />E-posta Gönder</a>
+      </div>
+
+      <dl class="contact__info">
+        <div>
+          <dt><Icon name="phone" size={20} /><span>Telefon</span></dt>
+          <dd><a href={site.phone.href}>{site.phone.display}</a></dd>
+        </div>
+        <div>
+          <dt><Icon name="mail" size={20} /><span>E-posta</span></dt>
+          <dd><a href={site.email.href}>{site.email.display}</a></dd>
+        </div>
+        <div>
+          <dt><Icon name="pin" size={20} /><span>Adres</span></dt>
+          <dd>
+            <address>{site.address.street}<br />{site.address.district} / {site.address.city}</address>
+            <a class="contact__route" href={site.directionsUrl} target="_blank" rel="noopener">
+              <Icon name="route" size={18} />Yol Tarifi Al<span class="visually-hidden"> (Google Haritalar, yeni sekmede açılır)</span>
+            </a>
+          </dd>
+        </div>
+        <div>
+          <dt><Icon name="clock" size={20} /><span>Çalışma saatleri</span></dt>
+          <dd>
+            <ul class="hours">
+              {site.hours.map((h) => <li><span>{h.days}</span><span>{h.time}</span></li>)}
+            </ul>
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <form
+      class="form reveal"
+      id="bilgi-formu"
+      novalidate
+      data-endpoint={endpoint}
+      data-phone={site.phone.display}
+      data-phone-href={site.phone.href}
+      data-email={site.email.display}
+    >
+      <input type="hidden" name="formTuru" value="Bilgi Talebi" />
+      <input type="hidden" name="_subject" value="Atlantis Spor Merkezi – Bilgi Talebi" />
+      <div class="field">
+        <label for="f-ad">Ad Soyad</label>
+        <input id="f-ad" name="adSoyad" type="text" autocomplete="name" required aria-describedby="e-ad" />
+        <p class="field__error" id="e-ad" hidden></p>
+      </div>
+      <div class="field">
+        <label for="f-tel">Telefon</label>
+        <input id="f-tel" name="telefon" type="tel" inputmode="tel" autocomplete="tel" required aria-describedby="e-tel" />
+        <p class="field__error" id="e-tel" hidden></p>
+      </div>
+      <div class="field">
+        <label for="f-eposta">E-posta <span>(isteğe bağlı)</span></label>
+        <input id="f-eposta" name="eposta" type="email" inputmode="email" autocomplete="email" aria-describedby="e-eposta" />
+        <p class="field__error" id="e-eposta" hidden></p>
+      </div>
+      <div class="field">
+        <label for="f-konu">Konu</label>
+        <select id="f-konu" name="konu" required aria-describedby="e-konu">
+          <option value="">Konu seçin</option>
+          {topics.map((t) => <option value={t}>{t}</option>)}
+        </select>
+        <p class="field__error" id="e-konu" hidden></p>
+      </div>
+      <div class="field field--wide field--plan" id="alan-sure">
+        <label for="f-sure">İlgilenilen üyelik süresi</label>
+        <select id="f-sure" name="uyelikSuresi" aria-describedby="e-sure">
+          <option value="">Süre seçin</option>
+          {plans.map((p) => <option value={p.title}>{p.title}</option>)}
+          <option value="Henüz karar vermedim">Henüz karar vermedim</option>
+        </select>
+        <p class="field__error" id="e-sure" hidden></p>
+      </div>
+      <div class="field field--wide">
+        <label for="f-mesaj">Mesaj <span>(isteğe bağlı)</span></label>
+        <textarea id="f-mesaj" name="mesaj" rows="3"></textarea>
+      </div>
+      <div class="form__trap" aria-hidden="true">
+        <label>Web sitesi <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+      </div>
+      <button class="btn btn--gold form__submit" type="submit">Bilgi Talebi Gönder</button>
+      <div class="form__status" role="status" aria-live="polite" hidden></div>
+    </form>
+  </div>
+</section>

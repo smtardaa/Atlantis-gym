@@ -1,0 +1,18 @@
+---
+import Icon from './Icon.astro';
+const items = [
+  { icon: 'dumbbell', label: 'Koçluk' },
+  { icon: 'treadmill', label: 'Donanımlı Salon' },
+  { icon: 'award', label: '2001’den Beri Kızılay’da' },
+] as const;
+---
+<section class="features on-light" id="ozellikler" aria-label="Öne çıkanlar">
+  <ul class="features__list container">
+    {items.map((item) => (
+      <li>
+        <Icon name={item.icon} size={38} />
+        <span>{item.label}</span>
+      </li>
+    ))}
+  </ul>
+</section>

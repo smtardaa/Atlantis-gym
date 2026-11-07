@@ -1,0 +1,38 @@
+---
+import { planIncludes, plans, showPrices } from '../data/site';
+import Icon from './Icon.astro';
+---
+<section class="membership on-light" id="uyelik" aria-labelledby="uyelik-baslik">
+  <div class="container">
+    <div class="membership__head reveal">
+      <h2 id="uyelik-baslik">Hedefine uygun üyelik.</h2>
+      <p>Aylık, 3 aylık, 6 aylık ve 12 aylık üyelik seçeneklerinden sana uygun olanı seç.</p>
+    </div>
+    <div class="membership__grid">
+      {plans.map((plan) => (
+        <article class="plan reveal" aria-labelledby={`plan-${plan.id}`}>
+          <h3 id={`plan-${plan.id}`}>{plan.title}</h3>
+          <p class="plan__note">{plan.note}</p>
+          {showPrices ? (
+            <p class="plan__price">{plan.price}</p>
+          ) : (
+            <p class="plan__price plan__price--ask">Güncel fiyat için bilgi alın</p>
+          )}
+          <ul>
+            {planIncludes.map((item) => <li><Icon name="check" size={18} /><span>{item}</span></li>)}
+          </ul>
+          <a
+            class="btn btn--ink"
+            href="#iletisim"
+            data-topic="Üyelik"
+            data-plan={plan.title}
+            aria-label={`${plan.title} üyelik: Bilgi Al`}
+          >Bilgi Al</a>
+        </article>
+      ))}
+    </div>
+    {showPrices && (
+      <p class="membership__note reveal">Fiyatlar değişebilir. Güncel fiyat ve kampanyalar için bilgi alın.</p>
+    )}
+  </div>
+</section>

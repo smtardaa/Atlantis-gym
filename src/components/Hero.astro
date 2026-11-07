@@ -1,0 +1,33 @@
+---
+import { getImage } from 'astro:assets';
+import hero from '../assets/photos/hero.jpg';
+import Icon from './Icon.astro';
+
+const img = await getImage({ src: hero, format: 'webp', widths: [640, 960, 1250] });
+---
+<section class="hero" aria-labelledby="hero-baslik">
+  <picture class="hero__media">
+    <img
+      src={img.src}
+      srcset={img.srcSet.attribute}
+      sizes="(max-width: 760px) 100vw, 67vw"
+      alt="Atlantis Spor Merkezi’nde ağırlık makineleri ve plakalarla donatılmış antrenman alanı"
+      width={hero.width}
+      height={hero.height}
+      fetchpriority="high"
+      loading="eager"
+    />
+  </picture>
+  <div class="hero__shade" aria-hidden="true"></div>
+  <div class="hero__content container">
+    <h1 id="hero-baslik">GÜCÜNÜ<br />KEŞFET.</h1>
+    <p class="hero__lead">Hedeflerini konuşalım, sana uygun antrenman yolculuğunu birlikte planlayalım.</p>
+    <div class="hero__actions">
+      <a class="btn btn--gold" href="#kocluk">Birlikte Planlayalım</a>
+      <a class="btn btn--outline" href="#iletisim">İletişime Geç</a>
+    </div>
+    <a class="hero__scroll" href="#ozellikler" aria-label="Sayfanın devamına geç">
+      <Icon name="chevron" size={18} />
+    </a>
+  </div>
+</section>

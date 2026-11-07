@@ -1,0 +1,150 @@
+---
+import { Picture, getImage } from 'astro:assets';
+import salon from '../assets/photos/salon.jpg';
+import Icon from './Icon.astro';
+
+const facts = [
+  { icon: 'pin', text: 'Kızılay’da, Mithatpaşa Caddesi üzerinde' },
+  { icon: 'award', text: '2001’den bu yana hizmette' },
+  { icon: 'clock', text: 'Hafta içi 09.00–21.00, Cumartesi 09.00–20.00' },
+] as const;
+
+const services = [
+  {
+    title: 'Fitness',
+    text: 'Sağlıklı ve mutlu bir yaşamın anahtarlarından biri. Temelinde düzenli spor ve egzersiz var.',
+  },
+  {
+    title: 'Kardiyo',
+    text: 'Vücut yağ oranını azaltmaya ve dengelemeye yönelik egzersizlerin bütünü.',
+  },
+  {
+    title: 'Vücut Geliştirme',
+    text: 'Ağırlık çalışmasını ve kalori dengesini bir araya getirerek kasları geliştirmeyi amaçlar.',
+  },
+];
+
+const photoModules = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/galeri/*.jpg', { eager: true });
+const captions: Record<string, string> = {
+  '7156': 'Kardiyo alanındaki koşu bantları',
+  '7160': 'Ağırlık istasyonları ve kardiyo alanı',
+  '7164': 'Makine parkuru ve aynalı duvarlar',
+  '7167': 'Kablolu çalışma istasyonu',
+  '7168': 'Çok yönlü kablo istasyonu',
+  '7170': 'Kablo kulesi ve sehpalar',
+  '7180': 'Salonun genel görünümü',
+  '7184': 'Ağırlık makineleri sırası',
+  '7185': 'Bacak çalışma makineleri ve posterler',
+  '7187': 'Plaka yüklemeli makineler',
+  '7188': 'Serbest ağırlık ve sehpa alanı',
+  '7192': 'Dambıl rafları ve antrenman sehpaları',
+};
+
+const photos = await Promise.all(
+  Object.entries(photoModules)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(async ([path, mod]) => {
+      const key = path.match(/salon-(\d+)\.jpg$/)?.[1] ?? '';
+      const thumb = await getImage({ src: mod.default, format: 'webp', widths: [360, 560, 800] });
+      const large = await getImage({ src: mod.default, format: 'webp', width: mod.default.width, quality: 78 });
+      return {
+        thumb,
+        large,
+        width: mod.default.width,
+        height: mod.default.height,
+        caption: captions[key] ?? 'Atlantis Spor Merkezi salonu',
+      };
+    }),
+);
+---
+<section class="salon" id="salonumuz" aria-labelledby="salon-baslik">
+  <div class="salon__media">
+    <Picture
+      src={salon}
+      formats={['webp']}
+      widths={[640, 960, 1250]}
+      sizes="(max-width: 960px) 100vw, 54vw"
+      alt="Atlantis Spor Merkezi’nin ahşap zeminli, siyah kolonlu geniş antrenman salonu"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <div class="salon__body reveal">
+    <p class="eyebrow">Salonumuz</p>
+    <h2 id="salon-baslik">İyi hisset. Güçlü yaşa.</h2>
+    <p class="salon__lead">
+      Atlantis Spor Merkezi, 2001’den bu yana Ankara Kızılay’da hizmet veriyor. Donanımlı salonu ve profesyonel
+      ekibiyle fitness, kardiyo ve vücut geliştirme için sana uygun bir ortam sunuyor. Spor yapmak bir yaşam tarzı;
+      Atlantis’te spor yapmak ise bir ayrıcalık.
+    </p>
+    <ul class="salon__facts">
+      {facts.map((f) => <li><Icon name={f.icon} size={24} /><span>{f.text}</span></li>)}
+    </ul>
+    <a class="btn btn--outline-gold" href="#galeri">Salonu Keşfet <Icon name="arrow" size={18} /></a>
+  </div>
+</section>
+
+<section class="gallery" id="galeri" aria-labelledby="galeri-baslik">
+  <div class="container">
+    <div class="gallery__head reveal">
+      <h2 id="galeri-baslik">Salonu yakından gör.</h2>
+      <p>Fitness, kardiyo ve vücut geliştirme alanlarımızdan kareler.</p>
+    </div>
+    <ul class="services reveal" aria-label="Hizmetlerimiz">
+      {services.map((s) => (
+        <li>
+          <h3>{s.title}</h3>
+          <p>{s.text}</p>
+        </li>
+      ))}
+    </ul>
+    <ul class="gallery__grid">
+      {photos.map((p, i) => (
+        <li class="reveal">
+          <a
+            class="gallery__item"
+            href={p.large.src}
+            data-gallery-index={i}
+            data-caption={p.caption}
+            data-width={p.width}
+            data-height={p.height}
+          >
+            <img
+              src={p.thumb.src}
+              srcset={p.thumb.srcSet.attribute}
+              sizes="(max-width: 560px) 50vw, (max-width: 960px) 33vw, 25vw"
+              alt={p.caption}
+              width={p.width}
+              height={p.height}
+              loading="lazy"
+              decoding="async"
+            />
+            <span class="gallery__zoom" aria-hidden="true"><Icon name="zoom" size={22} /></span>
+            <span class="visually-hidden">(büyüt)</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<dialog class="lightbox" id="lightbox" aria-label="Salon fotoğrafı">
+  <div class="lightbox__frame">
+    <figure>
+      <img id="lightbox-img" alt="" />
+      <figcaption>
+        <span id="lightbox-caption"></span>
+        <span class="lightbox__count" id="lightbox-count"></span>
+      </figcaption>
+    </figure>
+    <button class="lightbox__btn lightbox__close" type="button" data-lightbox="close" aria-label="Kapat">
+      <Icon name="close" size={24} />
+    </button>
+    <button class="lightbox__btn lightbox__prev" type="button" data-lightbox="prev" aria-label="Önceki fotoğraf">
+      <Icon name="left" size={26} />
+    </button>
+    <button class="lightbox__btn lightbox__next" type="button" data-lightbox="next" aria-label="Sonraki fotoğraf">
+      <Icon name="right" size={26} />
+    </button>
+  </div>
+</dialog>
